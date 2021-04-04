@@ -3,4 +3,9 @@ html{
   overflow: hidden
 }
 
+canvas{
+  width: 90%;
+  height: 90%;
+}
+
 

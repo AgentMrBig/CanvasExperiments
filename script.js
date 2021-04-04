@@ -1,3 +1,4 @@
+/*=========== START SETUP CANVAS ===========*/
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -21,26 +22,48 @@ function initSetup() {
     mouse.y = event.y;
     drawCircle(25);
   });
-}
 
-function gameLoop(timeStamp) {
-  // Update game objects in the loop
   update();
-
-  drawRect(10, 10, 200, 500);
-  drawText();
-
-  window.requestAnimationFrame(gameLoop);
 }
 
 initSetup();
+/*=========== END SETUP CANVAS ===========*/
+
+// function update() {
+//   anim();
+//   drawEverything();
+// }
+
+/*=========== START ANIMATE CODE ===========*/
 
 function update() {
-  ctx.font = "30px Comic Sans MS";
-  ctx.fillStyle = "red";
-  ctx.textAlign = "center";
-  ctx.fillText("Hello World", canvas.width / 2, canvas.height / 2);
+  drawUI();
+  drawCircle();
+  requestAnimationFrame(update);
 }
+
+// experiment with variable fps for different objects
+// by instantiating a new FpsController(callback to move "object", desired fps)
+function FpsController(cbf, fps) {
+  this.cbf = cbf;
+  this.fps = fps;
+  this.then = Date.now();
+  this.interval = 1000;
+
+  this.animate = () => {
+    this.now = Date.now();
+    this.difference = this.now = this.then;
+    if (this.difference > this.interval / this.fps) {
+      this.cbf();
+      this.then = this.now();
+    }
+    requestAnimationFrame(this.animate);
+  };
+
+  this.animate();
+}
+
+/*=========== END ANIMATE CODE ===========*/
 
 function drawCircle(size) {
   ctx.fillStyle = "rgb(200,200,150)";
@@ -60,42 +83,37 @@ function drawSquare(xPos, yPos, xSize, ySize) {
   ctx.fillRect(xPos, yPos, xSize, ySize);
 }
 
-function test() {
+/*=========== START UI CODE ===========*/
+
+function drawUI() {
+  console.log("draw UI");
+  drawText(mouse.x + " " + mouse.y);
+}
+function drawText(txtInput) {
   ctx.font = "30px Comic Sans MS";
   ctx.fillStyle = "red";
   ctx.textAlign = "center";
-  ctx.fillText("Hello World", canvas.width / 2, canvas.height / 2);
+  ctx.fillText(txtInput, 90, 40);
+}
+/*=========== END UI CODE ===========*/
+
+/*=========== START MOVEMENT CODE ===========*/
+let x = 100;
+let y = 100;
+let width = 50;
+let height = 50;
+function moveRight() {
+  x++;
+  ctx.fillRect(x, y, width, height);
 }
 
-const drawText = function () {
-  // normal, italic, bold
-  // px pt cm in rem em
-  // any installed or imported font
-  let fontFamily = "Allerta Stencil";
-  ctx.font = `normal 40px xyz, ${fontFamily}, Helvetica, Arial, monospace`;
-  ctx.fillStyle = "cornflowerblue";
-  ctx.strokeStyle = "#bada55";
-  //textAlign center, left, right, end, start
-  ctx.textAlign = "start";
-  //textBaseline top, hanging, middle, bottom,ideographic, alphabetic
-  ctx.textBaseline = "alphabetic";
-  //direction ltr, rtl, inherit
-  ctx.direction = "ltr";
+function moveLeft() {}
 
-  let txt = document.getElementById("msg").value;
-  let metrics = ctx.measureText(oldTxt);
-  let w = metrics.width;
-  ctx.clearRect(50, 110, w, -50);
+function moveUp() {}
 
-  if (txt == "") {
-    txt = "Please give me a message.";
-  }
-  ctx.strokeText(txt, 50, 100);
-  oldTxt = txt;
+function moveDown() {}
+/*=========== END MOVEMENT CODE ===========*/
 
-  ctx.fillStyle = "#999";
-  ctx.font = "italic 20px Arial";
-  let m = `Message is ${w}px wide`;
-  ctx.clearRect(50, 310, 500, -30);
-  ctx.fillText(m, 50, 300);
-};
+/*=========== START GAME TIMING CODE ===========*/
+
+/*=========== END GAME TIMING CODE ===========*/
